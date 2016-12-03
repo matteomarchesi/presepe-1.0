@@ -26,17 +26,26 @@ void firePit(int ledarray[]);
 
 //effetto fuoco
 int fuoco_led[] = {1,0};
-int fuoco2_led[] = {1,1};
+int fuoco2_led[] = {1,5};
+
+int water0_led[] = {1,1};
+int water1_led[] = {1,2};
+int water2_led[] = {1,3};
+
 
 //sequenze di lampeggio
-int lampeggia_led_A[]={8,3,5,7,9,11,13,15,17};
-int lampeggia_led_B[]={8,2,4,6,8,10,12,14,16};
+int lampeggia_led_A[]={6,4,7,9,11,13,15};
+int lampeggia_led_B[]={5,6,8,10,12,14};
+int lampeggia_led_C[]={3,1,2,3};
 
 //quante fasi ha ogni sequenza.
 //esempio: acceso e spento = 2
 //esempio: giallo, rosso, verde = 3
 int lampeggia_sequenza_A = 2;
 int lampeggia_sequenza_B = 4;
+
+int lampeggia_sequenza_C = 4;
+
 
 //quali colori devono lampeggiare
 //primo   numero = colore
@@ -52,15 +61,23 @@ int lampeggia_colori_B[4][3]={
   {60,255,100},
   {96,255,100},
   {128,255,100},
-  {128,0,100}
+  {128,255,100}
+  };
+
+int lampeggia_colori_C[4][3]={
+  {135,255,100},
+  {165,255,100},
+  {145,255,100},
+  {155,255,100}
   };
 
 int lampeggia_conta_A = 0;
 int lampeggia_conta_B = 0;
+int lampeggia_conta_C = 0;
 
 int lampa(int cycle, int maxN, int ledarray[], int seqarray[][3]);
 
-int giornonotte_led[]= {2,18,19};
+int giornonotte_led[]= {4,16,17,18,19};
 int giornonotte_conta = 0;
 
 int giornonotte(int cycle, int ledarray[]);
@@ -69,10 +86,13 @@ int bright = 255;
 int fade = 32;
 
 unsigned long pi_previousA = 0;
-const long pi_intervalA = 500;
+const long pi_intervalA = 750;
 
 unsigned long pi_previousB = 0;
-const long pi_intervalB = 750;
+const long pi_intervalB = 1000;
+
+unsigned long pi_previousC = 0;
+const long pi_intervalC = 250;
 
 unsigned long pi_previousGN = 0;
 const long pi_intervalGN = 200;
@@ -81,10 +101,14 @@ unsigned long pi_previousF = 0;
 unsigned long pi_previousF2 = 0;
 
 
+unsigned long pi_previousW0 = 0;
+unsigned long pi_previousW1 = 0;
+unsigned long pi_previousW2 = 0;
+
 void setup() {
 //  Serial.begin(9600);
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);
-  pinMode(13, OUTPUT);
+//  pinMode(13, OUTPUT);
  }
 
 void loop() {
@@ -101,7 +125,13 @@ void loop() {
     pi_previousB = current;
     lampeggia_conta_B = lampa(lampeggia_conta_B, lampeggia_sequenza_B, lampeggia_led_B, lampeggia_colori_B);
   }
-
+/*
+// effetto lampeggia C
+  if (current - pi_previousC >= pi_intervalC) {
+    pi_previousC = current;
+    lampeggia_conta_C = lampa(lampeggia_conta_C, lampeggia_sequenza_C, lampeggia_led_C, lampeggia_colori_C);
+  }
+*/
 
 // effetto giornonotte
   if (current - pi_previousGN >= pi_intervalGN) {
@@ -121,6 +151,24 @@ void loop() {
     firePit(fuoco2_led);
   }
 
+// effetto acqua
+  if (current - pi_previousW0 >= random(100, 300)) {
+    pi_previousW0 = current;
+    h2o(water0_led);
+  }
+
+// effetto acqua
+  if (current - pi_previousW1 >= random(100, 300)) {
+    pi_previousW1 = current;
+    h2o(water1_led);
+  }
+
+// effetto acqua
+  if (current - pi_previousW2 >= random(100, 300)) {
+    pi_previousW2 = current;
+    h2o(water2_led);
+  }
+
 
 }
 
@@ -134,6 +182,16 @@ void firePit(int ledarray[]){
   FastLED.show();
 }
 
+
+void h2o(int ledarray[]){
+    for (int i = 0; i < ledarray[0]; i++){
+    int C = random(130, 160); //color red, orange and yellow
+    int B = random(50, 150); // bright  
+    int S = random(255); //sat
+    leds[ledarray[i+1]] = CHSV(C,255,B);
+  }
+  FastLED.show();
+}
 
 int giornonotte(int cycle, int ledarray[]){
   int C = 16; //color
