@@ -152,19 +152,19 @@ void loop() {
   }
 
 // effetto acqua
-  if (current - pi_previousW0 >= random(100, 300)) {
+  if (current - pi_previousW0 >= random(300, 700)) {
     pi_previousW0 = current;
     h2o(water0_led);
   }
 
 // effetto acqua
-  if (current - pi_previousW1 >= random(100, 300)) {
+  if (current - pi_previousW1 >= random(300, 700)) {
     pi_previousW1 = current;
     h2o(water1_led);
   }
 
 // effetto acqua
-  if (current - pi_previousW2 >= random(100, 300)) {
+  if (current - pi_previousW2 >= random(300, 700)) {
     pi_previousW2 = current;
     h2o(water2_led);
   }
@@ -185,7 +185,7 @@ void firePit(int ledarray[]){
 
 void h2o(int ledarray[]){
     for (int i = 0; i < ledarray[0]; i++){
-    int C = random(130, 160); //color red, orange and yellow
+    int C = random(135, 160); //color red, orange and yellow
     int B = random(50, 150); // bright  
     int S = random(255); //sat
     leds[ledarray[i+1]] = CHSV(C,255,B);
