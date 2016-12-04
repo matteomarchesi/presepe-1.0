@@ -6,6 +6,8 @@
  * Arduino Nano: OK
  * Digispark:    OK
  * 
+ * Copyright (c) 2016 Matteo Marchesi
+ *
  */
 
 
